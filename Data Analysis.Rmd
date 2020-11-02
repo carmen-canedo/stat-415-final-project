@@ -1,0 +1,106 @@
+---
+title: 'STAT-615 Project I: Data Analysis'
+author: ""
+date: ""
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message= FALSE, warning = FALSE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+# Introduction
+
+```{r}
+#Load Data
+
+"britain_species.dat" %>%
+  read_delim(delim = " ", col_names = FALSE) %>%
+  rename(island = X1,
+         area = X2,
+         elevation = X3,
+         soil = X4,
+         latitude = X5,
+         distance = X6,
+         species = X7) %>%
+  mutate(area = as.double(area),
+         elevation = as.integer(elevation),
+         soil = as.integer(soil),
+         latitude = as.double(latitude),
+         distance = as.double(distance),
+         species = as.integer(species)) -> species
+
+
+species
+```
+
+For our data analysis project, we were interested in exploring the diversity of species. The importance of this question subject is nontrivial, as preserving species diversity is incredibly important to prevent extinction of them. By finding out what factors are related or reponsible for increased diversity, we can obtain general awareness of them, as well as understand their role in diversity and how to manage them properly to preserve variety of species.
+
+Because this is a very broad subject, we decided to narrow in on a particular dataset. The University of Florida contains a [data repository](http://users.stat.ufl.edu/~winner/datasets.html) which contained a [dataset](http://users.stat.ufl.edu/~winner/data/britain_species.dat) which included information about bird species diversity in the islands, as well as mainland Britain.
+
+
+The following variables are found in this dataset:
+- island: name of the island
+- area: measured in squared kilometers
+- elevation: highest peak, measured in meters
+- soil: number of different soil types
+- latitude
+- distance: from mainland britain
+- species: total number of bird species
+
+```{r, inlcude = TRUE}
+head(species, 5)
+```
+
+```{r}
+ncol(species)
+nrow(species)
+```
+
+The dataset contains 7 variables, and 42 observations. Although there is no missing data it should be noted that a limitation of this dataset and following analyses is that it is not include a particularly large number of observations, particularly with respect to the number of variables considered. 
+
+#Limitations
+
+Since `latitude` is not particularly useful, it will not be used in any analyses. This will place the observations to variable ratio at 42:6. However this would only be  the case for conisdered models in which all other 6 variables are included. Some limitations of the small dataset are that it does not produce strong statistical power, thus, any conclusions, null or alternative, should be interpreted with caution.
+
+#Preliminary Data Analysis
+
+```{r}
+summary(species)
+```
+
+```{r}
+ggplot(species, aes(x = area)) +
+  geom_histogram() +
+  theme_bw() +
+  ylab("") +
+  xlab("Island Area (in squared km)")
+```
+
+We note that for area there is a clear and extreme outlier.
+
+```{r}
+species %>%
+  filter(area > 200000)
+```
+
+Looking into the data we note that this outlier is clearly mainland Britain. To observe a more informative histogram, it is produced without this outlier.
+
+```{r}
+species %>%
+  filter(area < 200000) %>%
+  ggplot(aes(x = area)) +
+  geom_histogram() +
+  theme_bw() +
+  ylab("") +
+  xlab("Island Area (in squared km)")
+```
+
+After exclusion of other the outlier, we note that there are still a few more towards higher areas, and this variable in general appears to be strongly right skewed. Tranformation of this variable might be nessesary. We also note for further data visualization that the observation of mainland Britain will likely be an outlier as well.
+
+
+
