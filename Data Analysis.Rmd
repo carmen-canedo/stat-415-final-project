@@ -75,7 +75,7 @@ summary(species)
 
 ```{r}
 ggplot(species, aes(x = area)) +
-  geom_histogram() +
+  geom_histogram(color = "green") +
   theme_bw() +
   ylab("") +
   xlab("Island Area (in squared km)")
@@ -94,7 +94,7 @@ Looking into the data we note that this outlier is clearly mainland Britain. To 
 species %>%
   filter(area < 200000) %>%
   ggplot(aes(x = area)) +
-  geom_histogram() +
+  geom_histogram(color = "green") +
   theme_bw() +
   ylab("") +
   xlab("Island Area (in squared km)")
