@@ -1,0 +1,267 @@
+---
+title: 'STAT-615 Project I: Data Analysis'
+author: ''
+date: ''
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message= FALSE, warning = FALSE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+# Introduction
+
+```{r}
+#Load Data
+
+"britain_species.dat" %>%
+  read_delim(delim = " ", col_names = FALSE) %>%
+  rename(island = X1,
+         area = X2,
+         elevation = X3,
+         soil = X4,
+         latitude = X5,
+         distance = X6,
+         species = X7) %>%
+  mutate(area = as.double(area),
+         elevation = as.integer(elevation),
+         soil = as.integer(soil),
+         latitude = as.double(latitude),
+         distance = as.double(distance),
+         species = as.integer(species)) -> species
+
+
+species
+```
+
+For our data analysis project, we were interested in exploring the diversity of species. The importance of this question subject is nontrivial, as preserving species diversity is incredibly important to prevent extinction of them. By finding out what factors are related or reponsible for increased diversity, we can obtain general awareness of them, as well as understand their role in diversity and how to manage them properly to preserve variety of species.
+
+Because this is a very broad subject, we decided to narrow in on a particular dataset. The University of Florida contains a [data repository](http://users.stat.ufl.edu/~winner/datasets.html) which contained a [dataset](http://users.stat.ufl.edu/~winner/data/britain_species.dat) which included information about bird species diversity in the islands, as well as mainland Britain.
+
+
+The following variables are found in this dataset:
+- island: name of the island
+- area: measured in squared kilometers
+- elevation: highest peak, measured in meters
+- soil: number of different soil types
+- latitude
+- distance: from mainland britain
+- species: total number of bird species
+
+```{r, inlcude = TRUE}
+head(species, 5)
+```
+
+```{r}
+ncol(species)
+nrow(species)
+```
+
+The dataset contains 7 variables, and 42 observations. Although there is no missing data it should be noted that a limitation of this dataset and following analyses is that it is not include a particularly large number of observations, particularly with respect to the number of variables considered. 
+
+#Limitations
+
+Since `latitude` is not particularly useful, it will not be used in any analyses. This will place the observations to variable ratio at 42:6. However this would only be  the case for conisdered models in which all other 6 variables are included. Some limitations of the small dataset are that it does not produce strong statistical power, thus, any conclusions, null or alternative, should be interpreted with caution.
+
+#Preliminary Data Analysis
+
+```{r}
+summary(species)
+```
+
+
+#Variable Distributions 
+
+##Island Area 
+
+```{r}
+ggplot(species, aes(x = area)) +
+  geom_histogram(color = "green") +
+  theme_bw() +
+  ylab("") +
+  xlab("Island Area (in squared km)")
+```
+
+We note that for area there is a clear and extreme outlier.
+
+```{r}
+species %>%
+  filter(area > 200000)
+```
+
+Looking into the data we note that this outlier is clearly mainland Britain. To observe a more informative histogram, it is produced without this outlier.
+
+```{r}
+species %>%
+  filter(area < 200000) %>%
+  ggplot(aes(x = area)) +
+  geom_histogram(color = "green") +
+  theme_bw() +
+  ylab("") +
+  xlab("Island Area (in squared km)")
+```
+
+After exclusion of other the outlier, we note that there are still a few more towards higher areas, and this variable in general appears to be strongly right skewed. Tranformation of this variable might be nessesary. We also note for further data visualization that the observation of mainland Britain will likely be an outlier as well.
+
+
+##Elevation
+
+
+```{r}
+ggplot(species, aes(x = elevation)) +
+  geom_histogram(color = "red") +
+  theme_bw() +
+  ylab("") +
+  xlab("Elevation")
+```
+
+As clearly visible in the histogram above, there is a presence of an extreme outlier which could influence the predictions.
+
+
+```{r}
+species%>%
+  filter(elevation>1000)
+```
+
+The table above denotes the outliers within this variable. 
+
+
+```{r}
+species %>%
+  filter(elevation < 1010) %>%
+  ggplot(aes(x = elevation)) +
+  geom_histogram(color = "red") +
+  theme_bw() +
+  ylab("") +
+  xlab("Elevation")
+```
+
+Upon rmeoving the outliers, there is still a few present towards higher elevations. However this variable seems to be skewed towrds the rigth as well. Data manipilation will be required to get accurate estimates from this dataste. 
+
+
+## Number of Soil Types
+
+
+
+```{r}
+ggplot(species, aes(x = soil)) +
+  geom_histogram(color = "yellow") +
+  theme_bw() +
+  ylab("") +
+  xlab("Number of Soil Types")
+```
+As clearly visible, there are 3 clear outliers present 
+
+
+```{r}
+species%>%
+  filter(soil>20)
+```
+
+The table above denotes the extreme outliers within this variable. 
+
+
+```{r}
+species %>%
+  filter(soil < 100) %>%
+  ggplot(aes(x = soil)) +
+  geom_histogram(color = "yellow") +
+  theme_bw() +
+  ylab("") +
+  xlab("Number of Soil Types")
+```
+
+Despite getting rid of the extreme outliers, there is still presence of a few on the right. As other variables before, even this this variable is not normally disctributed and is skewed towards the right which will imoact prediction accuracies. 
+
+
+## Distance from Mainland
+
+
+
+```{r}
+ggplot(species, aes(x = distance)) +
+  geom_histogram(color = "blue") +
+  theme_bw() +
+  ylab("") +
+  xlab("Distance from Mainland")
+```
+As clearly visible, there are a few outliers over 100 km . 
+
+
+```{r}
+species%>%
+  filter(distance>100)
+```
+
+The table above denotes the extreme outliers within this variable. 
+
+
+```{r}
+species %>%
+  filter(distance < 100) %>%
+  ggplot(aes(x = distance)) +
+  geom_histogram(color = "blue") +
+  theme_bw() +
+  ylab("") +
+  xlab("Distance from Mainland")
+```
+After removing teh outliers, we can see that the distribution is somewhat normal with some skewness towards the right. Slight data transformation will be required. 
+
+
+## Distance from Mainland
+
+
+
+```{r}
+ggplot(species, aes(x = species)) +
+  geom_histogram(color = "orange") +
+  theme_bw() +
+  ylab("") +
+  xlab("Total number of Species")
+```
+As clearly visible, there are a few outliers over 100 km . 
+
+
+```{r}
+species%>%
+  filter(species>1500)
+```
+
+The table above denotes the extreme outliers within this variable. 
+
+
+```{r}
+species %>%
+  filter(species < 1500) %>%
+  ggplot(aes(x = species)) +
+  geom_histogram(color = "orange") +
+  theme_bw() +
+  ylab("") +
+  xlab("Total number of Species")
+```
+After removing teh outliers, we can see that the distribution is somewhat normal with some skewness towards the right and left. After soem data tranfromation, we will be able to being this normal distribution to be used in a prediction model. 
+
+# Corelation Matrix 
+
+```{r}
+species_cor<-species%>%
+  select(area,elevation,soil,distance,species)
+species_cor
+cor(species_cor, use = "complete.obs")
+
+```
+
+
+
+#Scatter Plots
+
+```{r}
+pairs(species_cor)
+```
+
