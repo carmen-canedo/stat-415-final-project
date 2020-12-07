@@ -18,7 +18,6 @@ library(ggplot2)
 
 
 ```{r}
-#Load Data
 bird_data <- read_table("~/GitHub/stat-415-final-project/data/britain_species.txt", col_names = FALSE)
 
 bird_data %>% 
@@ -53,14 +52,17 @@ anova(bird.reg)
 plot(bird.reg$residuals ~ bird_data$species)
 ```
 
-can we get rid of latitude
+can we get rid of latitude (partial F)
 
 ```{r}
+bird_lat <- lm(species ~ area + elevation + soil + distance, 
+               data = bird_data)
 
+anova(bird_lat, bird.reg)
 ```
 
 
-
+stepwise regression (david)
 
 
 
