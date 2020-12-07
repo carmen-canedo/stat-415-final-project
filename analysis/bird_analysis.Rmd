@@ -73,6 +73,8 @@ anova(bird_lat, bird.reg)
 ```
 
 
+
+
 stepwise regression (david)
 
 
