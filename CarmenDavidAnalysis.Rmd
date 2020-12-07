@@ -14,7 +14,6 @@ bird_data <- read_table("data/britain_species.txt", col_names = FALSE)
 ```
 
 
-
 ```{r}
 bird <- bird_data %>% 
   rename(Island = X1,
@@ -33,12 +32,31 @@ bird <- bird_data %>%
 head(bird)
 ```
 
-# Model Selection by Stepwise Regression
 
 ```{r}
 bird.reg <- lm(Species ~ Area + Elevation + Soil + Latitude + Distance, data = bird)
+```
+
+## Collinearity
+```{r}
+temp_bird <- bird %>% 
+  select(-Island)
+
+cor(temp_bird)
+```
+
+
+## Multicollinearity
+```{r}
+vif(bird.reg)
+```
+
+# Model Selection by Stepwise Regression
+
+```{r}
 step(bird.reg, direction = "both")
 ```
+
 
 # Partial F test Full/Reduced Model
 
@@ -80,7 +98,6 @@ abline(0,0)
 ```{r}
 qqPlot(bird.reg1)
 ```
-
 
 # Full/Reduced Model without Britain
 
