@@ -21,6 +21,9 @@ library(ggplot2)
 #Load Data
 bird_data <- read_table("~/GitHub/stat-415-final-project/data/britain_species.txt", col_names = FALSE)
 
+#Modified path
+#bird_data <- read_table("data/britain_species.txt", col_names = FALSE)
+
 bird_data %>% 
   rename(island = X1,
          area = X2,
