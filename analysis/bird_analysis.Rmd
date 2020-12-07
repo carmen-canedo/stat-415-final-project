@@ -128,41 +128,86 @@ bird_no <- lm(species ~ latitude + soil,
 anova(bird_no, bird.reg)
 ```
 
-
-
-
-
-
-
-stepwise regression (david)
-
-
-
-
-
+# Step-wise regression
+Slight modifications to formatting
 ```{r}
-
+bird <- bird_data %>% 
+  rename(Island = X1,
+         Area = X2,
+         Elevation = X3,
+         Soil = X4,
+         Latitude = X5,
+         Distance = X6,
+         Species = X7) %>%
+  mutate(Area = as.double(Area),
+         Elevation = as.integer(Elevation),
+         Soil = as.integer(Soil),
+         Latitude = as.double(Latitude),
+         Distance = as.double(Distance),
+         Species = as.integer(Species))
+head(bird)
 ```
 
 
+## Collinearity
+Before we delve into the role 
+```{r}
+temp_bird <- bird %>% 
+  select(-Island)
+
+cor(temp_bird)
+```
 
 
+## Multicollinearity
+```{r}
+vif(bird.reg)
+```
+
+# Model Selection by Stepwise Regression
+
+```{r}
+step(bird.reg, direction = "both")
+```
 
 
+# Partial F test Full/Reduced Model
+
+H0: Beta1 (Area) = Beta2 (Elevation) = 0 | Ha: ALOI | Alpha = 0.05
 
 
+```{r}
+bird.reg1 <- lm(Species ~ Soil + Latitude + Distance, data = bird)
+
+selcri <- function(lmout){
+  n <- length(lmout$fit)
+  rsq <- summary(lmout)$r.sq
+  adj.rsq <- summary(lmout)$adj.r.sq
+  aic <- extractAIC(lmout)[2]
+  bic <- extractAIC(lmout, k = log(n))[2]
+  press <- sum((lmout$residuals/(1 - hatvalues(lmout)))^2)
+  cbind(rsq, adj.rsq, aic, bic, press)
+}
+anova(bird.reg1, bird.reg)
+```
+
+Because the p value = 0.4896 > alpha level = 0.05, we fail to reject the null hypothesis and chose the reduced model by dropping the Area and Elevation variables from the model.
+
+```{r}
+selcri(bird.reg)
+selcri(bird.reg1)
+```
+
+The Reduced Model statistically fits the data better because the adjusted R^2 is higher indicating higher correlation for the reduced model, and the AIC, BIC, and PRESS values are lower indicating there is less error
+
+## Residuals
+```{r}
+plot(bird.reg1$residuals ~ bird$Species)
+abline(0,0)
+```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+## QQPlot
+```{r}
+qqPlot(bird.reg1)
+```
