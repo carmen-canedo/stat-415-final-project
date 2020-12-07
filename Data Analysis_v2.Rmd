@@ -15,6 +15,10 @@ knitr::opts_chunk$set(message= FALSE, warning = FALSE)
 library(tidyverse)
 ```
 
+
+$$\hat{species}=4.355e+03+1.636e-04(area)+1.001e-01(elevation)+7.166e+01(soil)-7.379e+01(latitude)+6.085e-01(distance)$$
+
+
 # Introduction
 
 ```{r}

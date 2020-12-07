@@ -52,6 +52,9 @@ summary(bird.reg)
 anova(bird.reg)
 ```
 
+$$\hat{species}=4.355e+03+1.636e-04(area)+1.001e-01(elevation)+7.166e+01(soil)-7.379e+01(latitude)+6.085e-01(distance)$$
+
+
 ```{r}
 plot(bird.reg$residuals ~ bird_data$species)
 abline(0,0)
@@ -127,6 +130,15 @@ bird_no <- lm(species ~ latitude + soil,
 
 anova(bird_no, bird.reg)
 ```
+
+
+```{r}
+qqnorm(bird_no$residuals)
+qqline(bird_no$residuals)
+```
+
+
+
 
 # Step-wise regression
 Slight modifications to formatting
