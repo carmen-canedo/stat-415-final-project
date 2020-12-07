@@ -46,11 +46,19 @@ summary(bird.reg)
 anova(bird.reg)
 ```
 
-
-
 ```{r}
 plot(bird.reg$residuals ~ bird_data$species)
 ```
+
+correlation regression
+
+```{r}
+bird_data %>%
+  select(area,elevation,soil,distance,species) -> bird_cor
+cor(bird_cor, use = "complete.obs")
+```
+
+
 
 can we get rid of latitude (partial F)
 
