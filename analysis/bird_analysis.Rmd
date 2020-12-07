@@ -13,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
+library(GGally)
+library(ggpubr)
 ```
 
 
@@ -37,6 +39,7 @@ bird_data %>%
          latitude = as.double(latitude),
          distance = as.double(distance),
          species = as.integer(species)) -> bird_data
+bird_data
 ```
 
 
@@ -51,6 +54,7 @@ anova(bird.reg)
 
 ```{r}
 plot(bird.reg$residuals ~ bird_data$species)
+abline(0,0)
 ```
 
 correlation regression
@@ -60,6 +64,19 @@ bird_data %>%
   select(area,elevation,soil,distance,species) -> bird_cor
 cor(bird_cor, use = "complete.obs")
 ```
+
+```{r}
+
+
+
+# ggarrange(area1, area2, elev, soil, dis, spe, lat,
+#           ncol = 2, nrow = 4)
+bird_data %>%
+  select(species, area, elevation, distance, soil, latitude) %>%
+  ggpairs()
+
+```
+
 
 
 
@@ -77,14 +94,42 @@ bird_noarea <- lm(species ~ latitude + elevation + soil + distance,
                data = bird_data)
 
 anova(bird_noarea, bird.reg)
-```
 
-```{r}
 bird_noelevation <- lm(species ~ latitude + area + soil + distance, 
                data = bird_data)
 
 anova(bird_noelevation, bird.reg)
+
+bird_nodistance <- lm(species ~ latitude + elevation + soil + area, 
+               data = bird_data)
+
+anova(bird_nodistance, bird.reg)
 ```
+
+```{r}
+bird_nolat <- lm(species ~ area + elevation + soil + distance, 
+               data = bird_data)
+
+anova(bird_nolat, bird.reg)
+
+bird_nosoil <- lm(species ~ latitude + elevation + area + distance, 
+               data = bird_data)
+
+anova(bird_nosoil, bird.reg)
+```
+
+
+
+
+```{r}
+bird_no <- lm(species ~ latitude + soil, 
+               data = bird_data)
+
+anova(bird_no, bird.reg)
+```
+
+
+
 
 
 
@@ -95,6 +140,9 @@ stepwise regression (david)
 
 
 
+```{r}
+
+```
 
 
 
