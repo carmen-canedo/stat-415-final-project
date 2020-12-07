@@ -21,7 +21,7 @@ library(tidyverse)
 #Load Data
 
 "britain_species.dat" %>%
-  read_delim(delim = " ", col_names = FALSE) %>%
+  read_table(col_names = FALSE) %>%
   rename(island = X1,
          area = X2,
          elevation = X3,
