@@ -66,10 +66,24 @@ cor(bird_cor, use = "complete.obs")
 can we get rid of latitude (partial F)
 
 ```{r}
-bird_lat <- lm(species ~ area + elevation + soil + distance, 
+bird_nolat <- lm(species ~ area + elevation + soil + distance, 
                data = bird_data)
 
-anova(bird_lat, bird.reg)
+anova(bird_nolat, bird.reg)
+```
+
+```{r}
+bird_noarea <- lm(species ~ latitude + elevation + soil + distance, 
+               data = bird_data)
+
+anova(bird_noarea, bird.reg)
+```
+
+```{r}
+bird_noelevation <- lm(species ~ latitude + area + soil + distance, 
+               data = bird_data)
+
+anova(bird_noelevation, bird.reg)
 ```
 
 
