@@ -1,0 +1,87 @@
+---
+title: "Bird_Analysis"
+author: "Reagan Edgren"
+date: "12/6/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+
+
+```{r}
+#Load Data
+bird_data <- read_table("~/GitHub/stat-415-final-project/data/britain_species.txt", col_names = FALSE)
+
+bird_data %>% 
+  rename(island = X1,
+         area = X2,
+         elevation = X3,
+         soil = X4,
+         latitude = X5,
+         distance = X6,
+         species = X7) %>%
+  mutate(area = as.double(area),
+         elevation = as.integer(elevation),
+         soil = as.integer(soil),
+         latitude = as.double(latitude),
+         distance = as.double(distance),
+         species = as.integer(species)) -> bird_data
+```
+
+
+Estimated regression function
+```{r}
+bird.reg <- lm(species ~ area + elevation + soil + latitude + distance, 
+               data = bird_data)
+
+summary(bird.reg)
+anova(bird.reg)
+```
+
+
+
+```{r}
+plot(bird.reg$residuals ~ bird_data$species)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
