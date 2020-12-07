@@ -1,12 +1,15 @@
 ---
 title: "R Notebook"
 output: html_notebook
+editor_options: 
+  chunk_output_type: inline
 ---
 
-```{r}
+```{r, message=FALSE}
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
+library(car)
 bird_data <- read_table("data/britain_species.txt", col_names = FALSE)
 ```
 
@@ -66,6 +69,19 @@ selcri(bird.reg1)
 
 The Reduced Model statistically fits the data better because the adjusted R^2 is higher indicating higher correlation for the reduced model, and the AIC, BIC, and PRESS values are lower indicating there is less error
 
+## Residuals
+```{r}
+plot(bird.reg1$residuals ~ bird$Species)
+abline(0,0)
+```
+
+
+## QQPlot
+```{r}
+qqPlot(bird.reg1)
+```
+
+
 # Full/Reduced Model without Britain
 
 Hypothesis: Because Britain is such a large outlier in terms of its Area and Elevation compared to the other British isles, then if it were removed the new models would fit the data better
@@ -92,6 +108,11 @@ selcri(NOBritainBird.reg)
 selcri(NOBritainBird.reg1)
 selcri(bird.reg1)
 ```
+
+```{r}
+influenceIndexPlot(NOBritainBird.reg1)
+```
+
 
 What can we conclude from this?
 
