@@ -75,7 +75,7 @@ summary(species)
 
 ```{r}
 ggplot(species, aes(x = area)) +
-  geom_histogram(color = "green") +
+  geom_histogram(color = "red") +
   theme_bw() +
   ylab("") +
   xlab("Island Area (in squared km)")
@@ -94,7 +94,7 @@ Looking into the data we note that this outlier is clearly mainland Britain. To 
 species %>%
   filter(area < 200000) %>%
   ggplot(aes(x = area)) +
-  geom_histogram(color = "green") +
+  geom_histogram(color = "red") +
   theme_bw() +
   ylab("") +
   xlab("Island Area (in squared km)")
@@ -102,5 +102,9 @@ species %>%
 
 After exclusion of other the outlier, we note that there are still a few more towards higher areas, and this variable in general appears to be strongly right skewed. Tranformation of this variable might be nessesary. We also note for further data visualization that the observation of mainland Britain will likely be an outlier as well.
 
+Histogram Summary
 
+```{r}
+
+```
 

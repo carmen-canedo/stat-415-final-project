@@ -85,7 +85,8 @@ ggplot(species, aes(x = area)) +
   geom_histogram(color = "green") +
   theme_bw() +
   ylab("") +
-  xlab("Island Area (in squared km)")
+  xlab("Island Area (in squared km)") -> area1
+area1
 ```
 
 We note that for area there is a clear and extreme outlier.
@@ -104,7 +105,8 @@ species %>%
   geom_histogram(color = "green") +
   theme_bw() +
   ylab("") +
-  xlab("Island Area (in squared km)")
+  xlab("Island Area (in squared km)") -> area2
+area2
 ```
 
 After exclusion of other the outlier, we note that there are still a few more towards higher areas, and this variable in general appears to be strongly right skewed. Tranformation of this variable might be nessesary. We also note for further data visualization that the observation of mainland Britain will likely be an outlier as well.
@@ -118,7 +120,8 @@ ggplot(species, aes(x = elevation)) +
   geom_histogram(color = "red") +
   theme_bw() +
   ylab("") +
-  xlab("Elevation")
+  xlab("Elevation") -> elev
+elev
 ```
 
 As clearly visible in the histogram above, there is a presence of an extreme outlier which could influence the predictions.
@@ -154,7 +157,8 @@ ggplot(species, aes(x = soil)) +
   geom_histogram(color = "yellow") +
   theme_bw() +
   ylab("") +
-  xlab("Number of Soil Types")
+  xlab("Number of Soil Types") -> soil
+soil
 ```
 As clearly visible, there are 3 clear outliers present 
 
@@ -189,7 +193,8 @@ ggplot(species, aes(x = distance)) +
   geom_histogram(color = "blue") +
   theme_bw() +
   ylab("") +
-  xlab("Distance from Mainland")
+  xlab("Distance from Mainland") -> dis
+dis
 ```
 As clearly visible, there are a few outliers over 100 km . 
 
@@ -223,7 +228,8 @@ ggplot(species, aes(x = species)) +
   geom_histogram(color = "orange") +
   theme_bw() +
   ylab("") +
-  xlab("Total number of Species")
+  xlab("Total number of Species") -> spe
+spe
 ```
 As clearly visible, there are a few outliers over 100 km . 
 
@@ -263,5 +269,28 @@ cor(species_cor, use = "complete.obs")
 
 ```{r}
 pairs(species_cor)
+```
+
+Summary
+
+```{r}
+ggplot(species, aes(x = latitude)) +
+  geom_histogram(color = "white") +
+  theme_bw() +
+  ylab("") +
+  xlab("Latittude") -> lat
+lat
+```
+
+
+```{r}
+library(ggpubr)
+ggarrange(area1, area2, elev, soil, dis, spe, lat,
+          ncol = 2, nrow = 4)
+library(GGally)
+species %>%
+  select(species, area, elevation, distance, soil, latitude) %>%
+  ggpairs()
+
 ```
 
