@@ -34,10 +34,10 @@ library(tidyverse)
          soil = as.integer(soil),
          latitude = as.double(latitude),
          distance = as.double(distance),
-         species = as.integer(species)) -> species
+         species = as.integer(species)) -> bird_datv2
 
 
-species
+bird_datv2
 ```
 
 For our data analysis project, we were interested in exploring the diversity of species. The importance of this question subject is nontrivial, as preserving species diversity is incredibly important to prevent extinction of them. By finding out what factors are related or reponsible for increased diversity, we can obtain general awareness of them, as well as understand their role in diversity and how to manage them properly to preserve variety of species.
@@ -55,12 +55,12 @@ The following variables are found in this dataset:
 - species: total number of bird species
 
 ```{r, inlcude = TRUE}
-head(species, 5)
+head(bird_datv2, 5)
 ```
 
 ```{r}
-ncol(species)
-nrow(species)
+ncol(bird_datv2)
+nrow(bird_datv2)
 ```
 
 The dataset contains 7 variables, and 42 observations. Although there is no missing data it should be noted that a limitation of this dataset and following analyses is that it is not include a particularly large number of observations, particularly with respect to the number of variables considered. 
@@ -72,7 +72,7 @@ Since `latitude` is not particularly useful, it will not be used in any analyses
 #Preliminary Data Analysis
 
 ```{r}
-summary(species)
+summary(bird_datv2)
 ```
 
 
@@ -81,7 +81,7 @@ summary(species)
 ##Island Area 
 
 ```{r}
-ggplot(species, aes(x = area)) +
+ggplot(bird_datv2, aes(x = area)) +
   geom_histogram(color = "green") +
   theme_bw() +
   ylab("") +
@@ -92,14 +92,14 @@ area1
 We note that for area there is a clear and extreme outlier.
 
 ```{r}
-species %>%
+bird_datv2 %>%
   filter(area > 200000)
 ```
 
 Looking into the data we note that this outlier is clearly mainland Britain. To observe a more informative histogram, it is produced without this outlier.
 
 ```{r}
-species %>%
+bird_datv2 %>%
   filter(area < 200000) %>%
   ggplot(aes(x = area)) +
   geom_histogram(color = "green") +
@@ -116,7 +116,7 @@ After exclusion of other the outlier, we note that there are still a few more to
 
 
 ```{r}
-ggplot(species, aes(x = elevation)) +
+ggplot(bird_datv2, aes(x = elevation)) +
   geom_histogram(color = "red") +
   theme_bw() +
   ylab("") +
@@ -128,7 +128,7 @@ As clearly visible in the histogram above, there is a presence of an extreme out
 
 
 ```{r}
-species%>%
+bird_datv2%>%
   filter(elevation>1000)
 ```
 
@@ -136,7 +136,7 @@ The table above denotes the outliers within this variable.
 
 
 ```{r}
-species %>%
+bird_datv2 %>%
   filter(elevation < 1010) %>%
   ggplot(aes(x = elevation)) +
   geom_histogram(color = "red") +
@@ -153,7 +153,7 @@ Upon rmeoving the outliers, there is still a few present towards higher elevatio
 
 
 ```{r}
-ggplot(species, aes(x = soil)) +
+ggplot(bird_datv2, aes(x = soil)) +
   geom_histogram(color = "yellow") +
   theme_bw() +
   ylab("") +
@@ -164,7 +164,7 @@ As clearly visible, there are 3 clear outliers present
 
 
 ```{r}
-species%>%
+bird_datv2%>%
   filter(soil>20)
 ```
 
@@ -172,7 +172,7 @@ The table above denotes the extreme outliers within this variable.
 
 
 ```{r}
-species %>%
+bird_datv2 %>%
   filter(soil < 100) %>%
   ggplot(aes(x = soil)) +
   geom_histogram(color = "yellow") +
@@ -189,7 +189,7 @@ Despite getting rid of the extreme outliers, there is still presence of a few on
 
 
 ```{r}
-ggplot(species, aes(x = distance)) +
+ggplot(bird_datv2, aes(x = distance)) +
   geom_histogram(color = "blue") +
   theme_bw() +
   ylab("") +
@@ -200,7 +200,7 @@ As clearly visible, there are a few outliers over 100 km .
 
 
 ```{r}
-species%>%
+bird_datv2%>%
   filter(distance>100)
 ```
 
@@ -208,7 +208,7 @@ The table above denotes the extreme outliers within this variable.
 
 
 ```{r}
-species %>%
+bird_datv2 %>%
   filter(distance < 100) %>%
   ggplot(aes(x = distance)) +
   geom_histogram(color = "blue") +
@@ -224,7 +224,7 @@ After removing teh outliers, we can see that the distribution is somewhat normal
 
 
 ```{r}
-ggplot(species, aes(x = species)) +
+ggplot(bird_datv2, aes(x = species)) +
   geom_histogram(color = "orange") +
   theme_bw() +
   ylab("") +
@@ -235,7 +235,7 @@ As clearly visible, there are a few outliers over 100 km .
 
 
 ```{r}
-species%>%
+bird_datv2%>%
   filter(species>1500)
 ```
 
@@ -243,7 +243,7 @@ The table above denotes the extreme outliers within this variable.
 
 
 ```{r}
-species %>%
+bird_datv2 %>%
   filter(species < 1500) %>%
   ggplot(aes(x = species)) +
   geom_histogram(color = "orange") +
@@ -256,10 +256,10 @@ After removing teh outliers, we can see that the distribution is somewhat normal
 # Corelation Matrix 
 
 ```{r}
-species_cor<-species%>%
+bird_datv2_cor<-bird_datv2%>%
   select(area,elevation,soil,distance,species)
-species_cor
-cor(species_cor, use = "complete.obs")
+bird_datv2_cor
+cor(bird_datv2_cor, use = "complete.obs")
 
 ```
 
@@ -268,13 +268,13 @@ cor(species_cor, use = "complete.obs")
 #Scatter Plots
 
 ```{r}
-pairs(species_cor)
+pairs(bird_datv2_cor)
 ```
 
 Summary
 
 ```{r}
-ggplot(species, aes(x = latitude)) +
+ggplot(bird_datv2, aes(x = latitude)) +
   geom_histogram(color = "white") +
   theme_bw() +
   ylab("") +
@@ -288,7 +288,7 @@ library(ggpubr)
 ggarrange(area1, area2, elev, soil, dis, spe, lat,
           ncol = 2, nrow = 4)
 library(GGally)
-species %>%
+bird_datv2 %>%
   select(species, area, elevation, distance, soil, latitude) %>%
   ggpairs()
 
