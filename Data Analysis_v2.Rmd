@@ -82,7 +82,7 @@ summary(bird_datv2)
 
 ```{r}
 ggplot(bird_datv2, aes(x = area)) +
-  geom_histogram(color = "green") +
+  geom_histogram(fill = "blue") +
   theme_bw() +
   ylab("") +
   xlab("Island Area (in squared km)") -> area1
@@ -102,7 +102,7 @@ Looking into the data we note that this outlier is clearly mainland Britain. To 
 bird_datv2 %>%
   filter(area < 200000) %>%
   ggplot(aes(x = area)) +
-  geom_histogram(color = "green") +
+  geom_histogram(fill = "orange") +
   theme_bw() +
   ylab("") +
   xlab("Island Area (in squared km)") -> area2
@@ -117,7 +117,7 @@ After exclusion of other the outlier, we note that there are still a few more to
 
 ```{r}
 ggplot(bird_datv2, aes(x = elevation)) +
-  geom_histogram(color = "red") +
+  geom_histogram(fill = "orange") +
   theme_bw() +
   ylab("") +
   xlab("Elevation") -> elev
@@ -139,7 +139,7 @@ The table above denotes the outliers within this variable.
 bird_datv2 %>%
   filter(elevation < 1010) %>%
   ggplot(aes(x = elevation)) +
-  geom_histogram(color = "red") +
+  geom_histogram(fill = "orange") +
   theme_bw() +
   ylab("") +
   xlab("Elevation")
@@ -154,7 +154,7 @@ Upon rmeoving the outliers, there is still a few present towards higher elevatio
 
 ```{r}
 ggplot(bird_datv2, aes(x = soil)) +
-  geom_histogram(color = "yellow") +
+  geom_histogram(fill = "blue") +
   theme_bw() +
   ylab("") +
   xlab("Number of Soil Types") -> soil
@@ -175,7 +175,7 @@ The table above denotes the extreme outliers within this variable.
 bird_datv2 %>%
   filter(soil < 100) %>%
   ggplot(aes(x = soil)) +
-  geom_histogram(color = "yellow") +
+  geom_histogram(fill = "red") +
   theme_bw() +
   ylab("") +
   xlab("Number of Soil Types")
@@ -190,7 +190,7 @@ Despite getting rid of the extreme outliers, there is still presence of a few on
 
 ```{r}
 ggplot(bird_datv2, aes(x = distance)) +
-  geom_histogram(color = "blue") +
+  geom_histogram(fill = "blue") +
   theme_bw() +
   ylab("") +
   xlab("Distance from Mainland") -> dis
@@ -211,7 +211,7 @@ The table above denotes the extreme outliers within this variable.
 bird_datv2 %>%
   filter(distance < 100) %>%
   ggplot(aes(x = distance)) +
-  geom_histogram(color = "blue") +
+  geom_histogram(fill = "blue") +
   theme_bw() +
   ylab("") +
   xlab("Distance from Mainland")
@@ -225,7 +225,7 @@ After removing teh outliers, we can see that the distribution is somewhat normal
 
 ```{r}
 ggplot(bird_datv2, aes(x = species)) +
-  geom_histogram(color = "orange") +
+  geom_histogram(fill = "orange") +
   theme_bw() +
   ylab("") +
   xlab("Total number of Species") -> spe
@@ -245,8 +245,9 @@ The table above denotes the extreme outliers within this variable.
 ```{r}
 bird_datv2 %>%
   filter(species < 1500) %>%
-  ggplot(aes(x = species)) +
-  geom_histogram(color = "orange") +
+  ggplot(aes(x = species,
+             fill = "orange")) +
+  geom_histogram() +
   theme_bw() +
   ylab("") +
   xlab("Total number of Species")
@@ -275,7 +276,7 @@ Summary
 
 ```{r}
 ggplot(bird_datv2, aes(x = latitude)) +
-  geom_histogram(color = "white") +
+  geom_histogram(fill = "orange") +
   theme_bw() +
   ylab("") +
   xlab("Latittude") -> lat
