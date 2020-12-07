@@ -1,0 +1,102 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+bird_data <- read_table("data/britain_species.txt", col_names = FALSE)
+```
+
+
+
+```{r}
+bird <- bird_data %>% 
+  rename(Island = X1,
+         Area = X2,
+         Elevation = X3,
+         Soil = X4,
+         Latitude = X5,
+         Distance = X6,
+         Species = X7) %>%
+  mutate(Area = as.double(Area),
+         Elevation = as.integer(Elevation),
+         Soil = as.integer(Soil),
+         Latitude = as.double(Latitude),
+         Distance = as.double(Distance),
+         Species = as.integer(Species))
+head(bird)
+```
+
+# Model Selection by Stepwise Regression
+
+```{r}
+bird.reg <- lm(Species ~ Area + Elevation + Soil + Latitude + Distance, data = bird)
+step(bird.reg, direction = "both")
+```
+
+# Partial F test Full/Reduced Model
+
+H0: Beta1 (Area) = Beta2 (Elevation) = 0 | Ha: ALOI | Alpha = 0.05
+
+
+```{r}
+bird.reg1 <- lm(Species ~ Soil + Latitude + Distance, data = bird)
+
+selcri <- function(lmout){
+  n <- length(lmout$fit)
+  rsq <- summary(lmout)$r.sq
+  adj.rsq <- summary(lmout)$adj.r.sq
+  aic <- extractAIC(lmout)[2]
+  bic <- extractAIC(lmout, k = log(n))[2]
+  press <- sum((lmout$residuals/(1 - hatvalues(lmout)))^2)
+  cbind(rsq, adj.rsq, aic, bic, press)
+}
+anova(bird.reg1, bird.reg)
+```
+
+Because the p value = 0.4896 > alpha level = 0.05, we fail to reject the null hypothesis and chose the reduced model by dropping the Area and Elevation variables from the model.
+
+```{r}
+selcri(bird.reg)
+selcri(bird.reg1)
+```
+
+The Reduced Model statistically fits the data better because the adjusted R^2 is higher indicating higher correlation for the reduced model, and the AIC, BIC, and PRESS values are lower indicating there is less error
+
+# Full/Reduced Model without Britain
+
+Hypothesis: Because Britain is such a large outlier in terms of its Area and Elevation compared to the other British isles, then if it were removed the new models would fit the data better
+
+```{r}
+NOBritainBird <- bird %>%
+  filter(Island != "Britain")
+NOBritainBird.reg <- lm(Species ~ Area + Elevation + Soil + Latitude + Distance, data = NOBritainBird)
+step(NOBritainBird.reg, direction = "both")
+```
+
+
+```{r}
+NOBritainBird.reg1 <- lm(Species ~ Soil + Latitude + Distance, data = NOBritainBird)
+anova(NOBritainBird.reg1, NOBritainBird.reg)
+```
+
+H0: Beta1 (Area) = Beta2 (Elevation) = 0 | Ha: ALOI | Alpha = 0.05
+
+Because the p value = 0.3466 > alpha level = 0.05, we fail to reject the null hypothesis and chose the reduced model by dropping the Area and Elevation variables from the model.
+
+```{r}
+selcri(NOBritainBird.reg)
+selcri(NOBritainBird.reg1)
+selcri(bird.reg1)
+```
+
+What can we conclude from this?
+
+
+
+
+
+
